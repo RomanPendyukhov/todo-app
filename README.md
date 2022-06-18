@@ -1,2 +1,2 @@
-Учебный проект на react
-https://todo-react-q4epvuhi5-romanpendyukhov.vercel.app/
+timer task
+https://todo-react-ldpi1k3fl-romanpendyukhov.vercel.app/
