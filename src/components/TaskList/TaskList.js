@@ -3,7 +3,7 @@ import './taskList.css';
 import PropTypes from 'prop-types';
 
 import Task from '../Task';
-import NewTaskForm from '../NewTaskForm';
+import EditTask from '../EditTask';
 
 function TaskList({ tasks, onDelete, onSwitchMode, onEdit, onToggleProperty }) {
   return (
@@ -16,7 +16,7 @@ function TaskList({ tasks, onDelete, onSwitchMode, onEdit, onToggleProperty }) {
           onSwitchMode={onSwitchMode}
           task={task}
         >
-          <NewTaskForm fieldIsEditing editingText={task.description} onEdit={onEdit} />
+          <EditTask editingText={task.description} onEdit={onEdit} />
         </Task>
       ))}
     </ul>

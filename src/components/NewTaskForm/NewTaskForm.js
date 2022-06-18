@@ -1,72 +1,70 @@
 import './newTaskForm.css';
 
 import { Component } from 'react';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 export default class NewTaskForm extends Component {
-  constructor(props) {
-    super(props);
-    const { fieldIsEditing, editingText } = this.props;
+  constructor() {
+    super();
     this.state = {
-      value: fieldIsEditing ? editingText : '',
+      description: '',
+      minutes: '',
+      seconds: '',
     };
   }
 
-  onInput = (e) => {
-    this.setState({
-      value: e.target.value,
-    });
+  changeTime = (e) => {
+    const { value, name } = e.target;
+    if (value.trim() && !Number.isNaN(value) && +value <= 59 && +value >= 0) {
+      this.setState({
+        [name]: value,
+      });
+    }
+    if (!value.trim()) this.setState({ [name]: '' });
   };
 
   onSubmit = (e) => {
-    const { onAdd, fieldIsEditing, onEdit } = this.props;
-    const { value } = this.state;
+    e.preventDefault();
+    const { onAdd } = this.props;
+    const { description } = this.state;
 
-    if (e.code === 'Enter' && value.trim()) {
-      if (!fieldIsEditing) {
-        onAdd(value);
-      } else {
-        onEdit(value);
-      }
-
-      this.setState({
-        value: '',
-      });
+    if (description.trim()) {
+      onAdd(this.state);
+      this.setState({ description: '', minutes: '', seconds: '' });
     }
   };
 
   render() {
-    const { fieldIsEditing } = this.props;
-    const { value } = this.state;
-
-    const inputClass = classNames({
-      'new-todo': !fieldIsEditing,
-      edit: fieldIsEditing,
-    });
+    const { description, minutes, seconds } = this.state;
 
     return (
-      <input
-        className={inputClass}
-        placeholder={fieldIsEditing ? '' : 'What needs to be done?'}
-        value={value}
-        onChange={this.onInput}
-        onKeyDown={this.onSubmit}
-      />
+      <form className="new-todo-form" onSubmit={this.onSubmit}>
+        <input
+          className="new-todo"
+          value={description}
+          placeholder="What needs to be done?"
+          onChange={(e) => this.setState({ description: e.target.value })}
+        />
+        <input
+          className="new-todo-form__timer"
+          name="minutes"
+          value={minutes}
+          onChange={this.changeTime}
+          placeholder="Min"
+        />
+        <input
+          className="new-todo-form__timer"
+          name="seconds"
+          value={seconds}
+          placeholder="Sec"
+          onChange={this.changeTime}
+        />
+        <button type="submit" hidden />
+      </form>
     );
   }
 }
 
-NewTaskForm.defaultProps = {
-  fieldIsEditing: false,
-  editingText: '',
-  onAdd: () => {},
-  onEdit: () => {},
-};
-
 NewTaskForm.propTypes = {
-  fieldIsEditing: PropTypes.bool,
-  editingText: PropTypes.string,
-  onAdd: PropTypes.func,
-  onEdit: PropTypes.func,
+  onAdd: PropTypes.func.isRequired,
 };

@@ -17,6 +17,7 @@ export default class App extends Component {
         completed: false,
         isEditing: false,
         time: new Date(2022, 5, 15, 13, 22),
+        timer: { minutes: '00', seconds: '00' },
       },
       {
         id: '2',
@@ -24,6 +25,7 @@ export default class App extends Component {
         completed: false,
         isEditing: false,
         time: new Date(2022, 5, 10, 10, 22),
+        timer: { minutes: '00', seconds: '00' },
       },
       {
         id: '3',
@@ -31,6 +33,7 @@ export default class App extends Component {
         completed: false,
         isEditing: false,
         time: new Date(2022, 5, 2, 22, 22),
+        timer: { minutes: '00', seconds: '00' },
       },
     ],
     filter: 'All',
@@ -43,14 +46,19 @@ export default class App extends Component {
     });
   };
 
-  onAdd = (description) => {
+  onAdd = (obj) => {
+    const { description } = obj;
+    let { minutes, seconds } = obj;
     const { taskData } = this.state;
+    minutes = minutes.length === 1 ? `0${minutes}` : minutes;
+    seconds = seconds.length === 1 ? `0${seconds}` : seconds;
     const newTask = {
       id: uuid(),
       description,
       completed: false,
       isEditing: false,
       time: new Date(),
+      timer: { minutes: minutes || '00', seconds: seconds || '00' },
     };
 
     this.setState({
@@ -87,7 +95,8 @@ export default class App extends Component {
   onEdit = (text) => {
     const { taskData } = this.state;
     const newArray = taskData.map((task) => {
-      if (task.isEditing) return { ...task, isEditing: false, description: text };
+      if (task.isEditing)
+        return { ...task, isEditing: false, description: text, timer: { minutes: '00', seconds: '00' } };
       return task;
     });
 
