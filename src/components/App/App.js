@@ -16,7 +16,7 @@ export default class App extends Component {
         description: 'Task 1',
         completed: false,
         isEditing: false,
-        time: new Date(2022, 5, 15, 13, 22),
+        time: new Date(2022, 5, 2, 22, 22),
         timer: { minutes: '00', seconds: '00' },
       },
       {
@@ -32,7 +32,7 @@ export default class App extends Component {
         description: 'Task 3',
         completed: false,
         isEditing: false,
-        time: new Date(2022, 5, 2, 22, 22),
+        time: new Date(2022, 5, 15, 13, 22),
         timer: { minutes: '00', seconds: '00' },
       },
     ],

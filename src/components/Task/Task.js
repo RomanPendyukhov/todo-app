@@ -19,26 +19,22 @@ export default class Task extends Component {
     clearInterval(this.timer);
   }
 
-  startTimer = () => {
-    clearInterval(this.timer);
-    const { seconds, minutes } = this.state;
-
-    this.timer = setInterval(() => {
-      if (seconds < 59) {
-        const sec = this.timerStep('seconds');
-        this.setState({ seconds: sec });
-      } else if (minutes < 59) {
-        const min = this.timerStep('minutes');
-        this.setState({
-          minutes: min,
-          seconds: '00',
-        });
-      }
-    }, 1000);
-  };
-
   pauseTimer = () => {
     clearInterval(this.timer);
+  };
+
+  startTimer = () => {
+    clearInterval(this.timer);
+
+    this.timer = setInterval(() => {
+      const sec = this.timerStep('seconds');
+      this.setState({ seconds: sec });
+      if (sec === 60) {
+        this.setState({ seconds: '00' });
+        const min = this.timerStep('minutes');
+        this.setState({ minutes: min });
+      }
+    }, 1000);
   };
 
   timerStep(time) {
@@ -67,7 +63,7 @@ export default class Task extends Component {
             checked={completed}
             onChange={() => {
               onToggleProperty(id, 'completed');
-              this.onPauseTimer();
+              this.pauseTimer();
             }}
           />
           <label onClickCapture={(e) => e.preventDefault()}>
@@ -90,7 +86,7 @@ export default class Task extends Component {
           <button type="button" className="icon icon-edit" onClick={() => onSwitchMode(id)} />
           <button type="button" className="icon icon-destroy" onClick={() => onDelete(id)} />
         </div>
-        {isEditing && children}
+        {task.isEditing && children}
       </li>
     );
   }
