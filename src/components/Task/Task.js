@@ -24,22 +24,28 @@ export default class Task extends Component {
   };
 
   startTimer = () => {
+    const { minutes, seconds } = this.state;
     clearInterval(this.timer);
-
-    this.timer = setInterval(() => {
-      const sec = this.timerStep('seconds');
-      this.setState({ seconds: sec });
-      if (sec === 60) {
-        this.setState({ seconds: '00' });
-        const min = this.timerStep('minutes');
-        this.setState({ minutes: min });
-      }
-    }, 1000);
+    if (minutes !== '00' || seconds !== '00')
+      this.timer = setInterval(() => {
+        const sec = this.timerStep('seconds');
+        if (!Number(this.timerStep('minutes') + 1) && !Number(sec)) {
+          this.setState({ seconds: '00' });
+          this.pauseTimer();
+        } else {
+          this.setState({ seconds: sec });
+          if (sec === '00') {
+            this.setState({ seconds: '59' });
+            const min = this.timerStep('minutes');
+            this.setState({ minutes: min });
+          }
+        }
+      }, 1000);
   };
 
   timerStep(time) {
     const { [time]: t } = this.state;
-    let step = +t + 1;
+    let step = t - 1;
     step = step < 10 ? `0${step}` : step;
     return step;
   }

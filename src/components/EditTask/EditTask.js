@@ -3,7 +3,7 @@ import './EditTask.css';
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export default class TaskEditor extends Component {
+export default class EditTask extends Component {
   constructor(props) {
     super(props);
     const { editingText } = this.props;
@@ -33,7 +33,7 @@ export default class TaskEditor extends Component {
   }
 }
 
-TaskEditor.propTypes = {
+EditTask.propTypes = {
   editingText: PropTypes.string.isRequired,
   onEdit: PropTypes.func.isRequired,
 };
