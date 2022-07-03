@@ -1,3 +1,3 @@
-timer task
+timer with hooks
 
-https://todo-react-lecz9vu5t-romanpendyukhov.vercel.app/
+https://todo-react-dcmjgex7d-romanpendyukhov.vercel.app/
