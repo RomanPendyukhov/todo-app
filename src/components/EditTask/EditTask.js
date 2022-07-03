@@ -1,39 +1,25 @@
 import './EditTask.css';
 
-import { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-export default class EditTask extends Component {
-  constructor(props) {
-    super(props);
-    const { editingText } = this.props;
-    this.state = {
-      value: editingText,
-    };
-  }
+function EditTask({ editingText, onEdit }) {
+  const [text, setText] = React.useState(editingText);
 
-  onSubmit = (e) => {
-    const { onEdit } = this.props;
-    const { value } = this.state;
-
+  const onSubmit = (e) => {
     if (e.code === 'Enter') {
-      onEdit(value);
+      onEdit(text);
     }
   };
 
-  onInput = (e) => {
-    this.setState({
-      value: e.target.value,
-    });
-  };
+  const onInput = (e) => setText(e.target.value);
 
-  render() {
-    const { value } = this.state;
-    return <input type="text" value={value} className="edit" onChange={this.onInput} onKeyDown={this.onSubmit} />;
-  }
+  return <input type="text" value={text} className="edit" onChange={onInput} onKeyDown={onSubmit} />;
 }
 
 EditTask.propTypes = {
   editingText: PropTypes.string.isRequired,
   onEdit: PropTypes.func.isRequired,
 };
+
+export default EditTask;

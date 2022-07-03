@@ -1,6 +1,6 @@
 import './app.css';
 
-import { Component } from 'react';
+import React from 'react';
 import { v1 as uuid } from 'uuid';
 
 import TaskList from '../TaskList';
@@ -8,48 +8,45 @@ import TaskFilter from '../TaskFilter';
 import Footer from '../Footer';
 import NewTaskForm from '../NewTaskForm';
 
-export default class App extends Component {
-  state = {
-    taskData: [
-      {
-        id: '1',
-        description: 'Task 1',
-        completed: false,
-        isEditing: false,
-        time: new Date(2022, 5, 2, 22, 22),
-        timer: { minutes: '00', seconds: '00' },
-      },
-      {
-        id: '2',
-        description: 'Task 2',
-        completed: false,
-        isEditing: false,
-        time: new Date(2022, 5, 10, 10, 22),
-        timer: { minutes: '00', seconds: '00' },
-      },
-      {
-        id: '3',
-        description: 'Task 3',
-        completed: false,
-        isEditing: false,
-        time: new Date(2022, 5, 15, 13, 22),
-        timer: { minutes: '00', seconds: '00' },
-      },
-    ],
-    filter: 'All',
+const taskData = [
+  {
+    id: '1',
+    description: 'Task 1',
+    completed: false,
+    isEditing: false,
+    time: new Date(2022, 5, 2, 22, 22),
+    timer: { minutes: '00', seconds: '00' },
+  },
+  {
+    id: '2',
+    description: 'Task 2',
+    completed: false,
+    isEditing: false,
+    time: new Date(2022, 5, 10, 10, 22),
+    timer: { minutes: '00', seconds: '00' },
+  },
+  {
+    id: '3',
+    description: 'Task 3',
+    completed: false,
+    isEditing: false,
+    time: new Date(2022, 5, 15, 13, 22),
+    timer: { minutes: '00', seconds: '00' },
+  },
+];
+
+function App() {
+  const [tasks, setTasks] = React.useState(taskData);
+  const [filter, setFilter] = React.useState('All');
+
+  const onDelete = (id) => {
+    const newArray = tasks.filter((task) => task.id !== id);
+    setTasks(newArray);
   };
 
-  onDelete = (id) => {
-    const { taskData } = this.state;
-    this.setState({
-      taskData: taskData.filter((task) => task.id !== id),
-    });
-  };
-
-  onAdd = (obj) => {
+  const onAdd = (obj) => {
     const { description } = obj;
     let { minutes, seconds } = obj;
-    const { taskData } = this.state;
     minutes = minutes.length === 1 ? `0${minutes}` : minutes;
     seconds = seconds.length === 1 ? `0${seconds}` : seconds;
     const newTask = {
@@ -61,67 +58,46 @@ export default class App extends Component {
       timer: { minutes: minutes || '00', seconds: seconds || '00' },
     };
 
-    this.setState({
-      taskData: [...taskData, newTask],
-    });
+    setTasks(tasks.concat(newTask));
   };
 
-  onToggleProperty = (id, property) => {
-    const { taskData } = this.state;
-    const newArray = taskData.map((task) => {
+  const onToggleProperty = (id, property) => {
+    const newArray = tasks.map((task) => {
       if (task.id === id) return { ...task, [property]: !task[property] };
       return task;
     });
 
-    this.setState({
-      taskData: newArray,
-    });
+    setTasks(newArray);
   };
 
-  onSwitchMode = (id) => {
-    const { taskData } = this.state;
-    const newArray = taskData.map((task) => {
+  const onSwitchMode = (id) => {
+    const newArray = tasks.map((task) => {
       if (task.completed) return task;
       if (task.id === id) return { ...task, isEditing: true };
       if (task.isEditing) return { ...task, isEditing: false };
       return task;
     });
 
-    this.setState({
-      taskData: newArray,
-    });
+    setTasks(newArray);
   };
 
-  onEdit = (text) => {
-    const { taskData } = this.state;
-    const newArray = taskData.map((task) => {
+  const onEdit = (text) => {
+    const newArray = tasks.map((task) => {
       if (task.isEditing)
         return { ...task, isEditing: false, description: text, timer: { minutes: '00', seconds: '00' } };
       return task;
     });
 
-    this.setState({
-      taskData: newArray,
-    });
+    setTasks(newArray);
   };
 
-  toggleFilter = (filter) => {
-    this.setState({
-      filter,
-    });
+  const toggleFilter = (settedFilter) => setFilter(settedFilter);
+  const onClearCompleted = () => {
+    const newArray = tasks.filter((task) => !task.completed);
+    setTasks(newArray);
   };
 
-  onClearCompleted = () => {
-    const { taskData } = this.state;
-    this.setState({
-      taskData: taskData.filter((task) => !task.completed),
-    });
-  };
-
-  filterTasks() {
-    const { taskData: tasks } = this.state;
-    const { filter } = this.state;
-
+  const filterTasks = () => {
     switch (filter) {
       case 'Active':
         return tasks.filter((task) => !task.completed);
@@ -130,32 +106,31 @@ export default class App extends Component {
       default:
         return tasks;
     }
-  }
+  };
 
-  render() {
-    const { taskData, filter } = this.state;
-    const leftTasks = taskData.filter((task) => !task.completed).length;
-    const tasks = this.filterTasks();
+  const filteredTasks = filterTasks();
+  const leftTasks = tasks.filter((task) => !task.completed).length;
 
-    return (
-      <section className="todoapp">
-        <header className="header">
-          <h1>Todos</h1>
-          <NewTaskForm onAdd={this.onAdd} />
-        </header>
-        <section className="main">
-          <TaskList
-            onDelete={this.onDelete}
-            onToggleProperty={this.onToggleProperty}
-            onSwitchMode={this.onSwitchMode}
-            onEdit={this.onEdit}
-            tasks={tasks}
-          />
-          <Footer filter={filter} leftTasks={leftTasks} onClearCompleted={this.onClearCompleted}>
-            <TaskFilter filter={filter} toggleFilter={this.toggleFilter} />
-          </Footer>
-        </section>
+  return (
+    <section className="todoapp">
+      <header className="header">
+        <h1>Todos</h1>
+        <NewTaskForm onAdd={onAdd} />
+      </header>
+      <section className="main">
+        <TaskList
+          onDelete={onDelete}
+          onToggleProperty={onToggleProperty}
+          onSwitchMode={onSwitchMode}
+          onEdit={onEdit}
+          tasks={filteredTasks}
+        />
+        <Footer filter={filter} leftTasks={leftTasks} onClearCompleted={onClearCompleted}>
+          <TaskFilter filter={filter} toggleFilter={toggleFilter} />
+        </Footer>
       </section>
-    );
-  }
+    </section>
+  );
 }
+
+export default App;
