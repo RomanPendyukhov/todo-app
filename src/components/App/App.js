@@ -4,7 +4,6 @@ import React from 'react';
 import { v1 as uuid } from 'uuid';
 
 import TaskList from '../TaskList';
-import TaskFilter from '../TaskFilter';
 import Footer from '../Footer';
 import NewTaskForm from '../NewTaskForm';
 
@@ -125,9 +124,7 @@ function App() {
           onEdit={onEdit}
           tasks={filteredTasks}
         />
-        <Footer filter={filter} leftTasks={leftTasks} onClearCompleted={onClearCompleted}>
-          <TaskFilter filter={filter} toggleFilter={toggleFilter} />
-        </Footer>
+        <Footer filter={filter} leftTasks={leftTasks} toggleFilter={toggleFilter} onClearCompleted={onClearCompleted} />
       </section>
     </section>
   );

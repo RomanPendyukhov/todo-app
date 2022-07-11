@@ -1,7 +1,9 @@
 import './footer.css';
 import PropTypes from 'prop-types';
 
-function Footer({ onClearCompleted, leftTasks, children }) {
+import TaskFilter from '../TaskFilter';
+
+function Footer({ onClearCompleted, leftTasks, filter, toggleFilter }) {
   let item = 'item';
   if (leftTasks > 1 || leftTasks === 0) {
     item = 'items';
@@ -12,7 +14,7 @@ function Footer({ onClearCompleted, leftTasks, children }) {
         {`${leftTasks} `}
         {item} left
       </span>
-      {children}
+      <TaskFilter filter={filter} toggleFilter={toggleFilter} />
       <button type="button" className="clear-completed" onClick={onClearCompleted}>
         Clear completed
       </button>
@@ -23,7 +25,6 @@ function Footer({ onClearCompleted, leftTasks, children }) {
 Footer.propTypes = {
   onClearCompleted: PropTypes.func.isRequired,
   leftTasks: PropTypes.number.isRequired,
-  children: PropTypes.element.isRequired,
 };
 
 export default Footer;
